@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pagamento Realizado</title>
+    <title id="page-title">Pagamento Realizado</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -32,10 +32,79 @@
 <body>
     <div class="container">
         <div class="icon">✅</div>
-        <h1 class="success">Pagamento Realizado com Sucesso!</h1>
-        <p>Seu pagamento foi processado. Os tokens serão adicionados à sua conta em breve. Teste</p>
-        <p>Você pode fechar esta aba e retornar ao Discord.</p>
+        <h1 class="success" id="main-title">Pagamento Realizado com Sucesso!</h1>
+        <p id="success-message">Seu pagamento foi processado. Os tokens serão adicionados à sua conta em breve.</p>
+        <p id="order-info" style="margin: 20px 0; font-weight: bold; color: #6c757d;"></p>
+        <p id="close-message">Você pode fechar esta aba e retornar ao Discord.</p>
     </div>
+
+    <script>
+        // Traduções para diferentes idiomas
+        const translations = {
+            'en-US': {
+                title: 'Payment Successful',
+                mainTitle: 'Payment Successful!',
+                successMessage: 'Your payment has been processed. Tokens will be added to your account shortly.',
+                orderText: 'Order ID: ',
+                closeMessage: 'You can close this tab and return to Discord.'
+            },
+            'pt-BR': {
+                title: 'Pagamento Realizado',
+                mainTitle: 'Pagamento Realizado com Sucesso!',
+                successMessage: 'Seu pagamento foi processado. Os tokens serão adicionados à sua conta em breve.',
+                orderText: 'ID do Pedido: ',
+                closeMessage: 'Você pode fechar esta aba e retornar ao Discord.'
+            },
+            'es-ES': {
+                title: 'Pago Realizado',
+                mainTitle: '¡Pago Realizado con Éxito!',
+                successMessage: 'Su pago ha sido procesado. Los tokens serán añadidos a su cuenta en breve.',
+                orderText: 'ID del Pedido: ',
+                closeMessage: 'Puede cerrar esta pestaña y volver a Discord.'
+            },
+            'ko': {
+                title: '결제 완료',
+                mainTitle: '결제가 성공적으로 완료되었습니다!',
+                successMessage: '결제가 처리되었습니다. 토큰이 곧 계정에 추가됩니다.',
+                orderText: '주문 ID: ',
+                closeMessage: '이 탭을 닫고 Discord로 돌아갈 수 있습니다.'
+            }
+        };
+
+        // Função para obter parâmetros da URL
+        function getUrlParameters() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return {
+                sessionId: urlParams.get('session_id'),
+                orderId: urlParams.get('order_id'),
+                lang: urlParams.get('lang') || 'en-US'
+            };
+        }
+
+        // Função para aplicar traduções
+        function applyTranslations(lang, orderId) {
+            const translation = translations[lang] || translations['en-US'];
+
+            document.getElementById('page-title').textContent = translation.title;
+            document.getElementById('main-title').textContent = translation.mainTitle;
+            document.getElementById('success-message').textContent = translation.successMessage;
+            document.getElementById('close-message').textContent = translation.closeMessage;
+
+            // Exibir ID do pedido se disponível
+            if (orderId) {
+                document.getElementById('order-info').textContent = translation.orderText + orderId;
+            }
+
+            // Atualizar atributo lang do HTML
+            document.documentElement.lang = lang.toLowerCase();
+        }
+
+        // Inicializar página
+        document.addEventListener('DOMContentLoaded', function() {
+            const params = getUrlParameters();
+            applyTranslations(params.lang, params.orderId);
+        });
+    </script>
 </body>
 
 </html>
