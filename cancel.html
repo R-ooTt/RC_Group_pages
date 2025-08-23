@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pagamento Cancelado</title>
+    <title id="page-title">Pagamento Cancelado</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -32,10 +32,78 @@
 <body>
     <div class="container">
         <div class="icon">❌</div>
-        <h1 class="cancel">Pagamento Cancelado</h1>
-        <p>O pagamento foi cancelado. Nenhuma cobrança foi realizada.</p>
-        <p>Você pode fechar esta aba e tentar novamente no Discord.</p>
+        <h1 class="cancel" id="main-title">Pagamento Cancelado</h1>
+        <p id="cancel-message">O pagamento foi cancelado. Nenhuma cobrança foi realizada.</p>
+        <p id="order-info" style="margin: 20px 0; font-weight: bold; color: #6c757d;"></p>
+        <p id="retry-message">Você pode fechar esta aba e tentar novamente no Discord.</p>
     </div>
+
+    <script>
+        // Traduções para diferentes idiomas
+        const translations = {
+            'en-US': {
+                title: 'Payment Cancelled',
+                mainTitle: 'Payment Cancelled',
+                cancelMessage: 'The payment was cancelled. No charges were made.',
+                orderText: 'Order ID: ',
+                retryMessage: 'You can close this tab and try again on Discord.'
+            },
+            'pt-BR': {
+                title: 'Pagamento Cancelado',
+                mainTitle: 'Pagamento Cancelado',
+                cancelMessage: 'O pagamento foi cancelado. Nenhuma cobrança foi realizada.',
+                orderText: 'ID do Pedido: ',
+                retryMessage: 'Você pode fechar esta aba e tentar novamente no Discord.'
+            },
+            'es-ES': {
+                title: 'Pago Cancelado',
+                mainTitle: 'Pago Cancelado',
+                cancelMessage: 'El pago fue cancelado. No se realizaron cargos.',
+                orderText: 'ID del Pedido: ',
+                retryMessage: 'Puede cerrar esta pestaña e intentar nuevamente en Discord.'
+            },
+            'ko': {
+                title: '결제 취소',
+                mainTitle: '결제 취소',
+                cancelMessage: '결제가 취소되었습니다. 요금이 청구되지 않았습니다.',
+                orderText: '주문 ID: ',
+                retryMessage: '이 탭을 닫고 Discord에서 다시 시도할 수 있습니다.'
+            }
+        };
+
+        // Função para obter parâmetros da URL
+        function getUrlParameters() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return {
+                orderId: urlParams.get('order_id'),
+                lang: urlParams.get('lang') || 'en-US'
+            };
+        }
+
+        // Função para aplicar traduções
+        function applyTranslations(lang, orderId) {
+            const translation = translations[lang] || translations['en-US'];
+
+            document.getElementById('page-title').textContent = translation.title;
+            document.getElementById('main-title').textContent = translation.mainTitle;
+            document.getElementById('cancel-message').textContent = translation.cancelMessage;
+            document.getElementById('retry-message').textContent = translation.retryMessage;
+
+            // Exibir ID do pedido se disponível
+            if (orderId) {
+                document.getElementById('order-info').textContent = translation.orderText + orderId;
+            }
+
+            // Atualizar atributo lang do HTML
+            document.documentElement.lang = lang.toLowerCase();
+        }
+
+        // Inicializar página
+        document.addEventListener('DOMContentLoaded', function() {
+            const params = getUrlParameters();
+            applyTranslations(params.lang, params.orderId);
+        });
+    </script>
 </body>
 
 </html>
